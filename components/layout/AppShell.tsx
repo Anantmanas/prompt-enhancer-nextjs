@@ -3,9 +3,10 @@ import { Sparkles } from "lucide-react";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard" },
-  { href: "/history", label: "History" },
-  { href: "/pricing", label: "Pricing" },
-  { href: "/docs", label: "Docs" }
+  // { href: "/history", label: "History" },
+  // { href: "/pricing", label: "Pricing" },
+  { href: "https://github.com/Anantmanas/prompt-enhancer-nextjs", label: "GitHub↗" }
+
 ];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -30,12 +31,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </Link>
             ))}
           </nav>
-          <Link
+          {/* <Link
             href="/auth/sign-in"
             className="focus-ring rounded-full border border-line bg-white/70 px-4 py-2 text-sm font-medium text-ink transition hover:bg-white"
           >
             Sign in
-          </Link>
+          </Link> */}
         </div>
       </header>
       {children}
