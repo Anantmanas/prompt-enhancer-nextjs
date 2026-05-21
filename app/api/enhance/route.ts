@@ -28,9 +28,9 @@ type NvidiaChatCompletion = {
 
 function getMaxTokens(request: EnhanceRequest) {
   const detailTokens = {
-    concise: 1600,
-    balanced: 3200,
-    deep: 6000
+    concise: 900,
+    balanced: 1600,
+    deep: 2600
   };
 
   return detailTokens[request.detailLevel];
@@ -38,12 +38,20 @@ function getMaxTokens(request: EnhanceRequest) {
 
 function getReasoningBudget(request: EnhanceRequest) {
   const reasoningTokens = {
-    concise: 512,
-    balanced: 1200,
-    deep: 2400
+    concise: 128,
+    balanced: 256,
+    deep: 512
   };
 
   return reasoningTokens[request.detailLevel];
+}
+
+function getTimeoutMs(request: EnhanceRequest, stream: boolean) {
+  if (!stream) {
+    return request.detailLevel === "deep" ? 28_000 : 22_000;
+  }
+
+  return request.detailLevel === "deep" ? 46_000 : 38_000;
 }
 
 function parseStreamChunk(chunk: string) {
@@ -125,7 +133,7 @@ function buildNemotronPayload(instructionPrompt: string, request: EnhanceRequest
     model: NVIDIA_MODEL,
     messages: [{ role: "user", content: instructionPrompt }],
     max_tokens: getMaxTokens(request),
-    temperature: 1,
+    temperature: 0.75,
     top_p: 0.95,
     stream,
     chat_template_kwargs: { enable_thinking: true, low_effort: request.detailLevel !== "deep" },
@@ -142,7 +150,7 @@ async function callNemotron(instructionPrompt: string, request: EnhanceRequest, 
       "Content-Type": "application/json"
     },
     body: JSON.stringify(buildNemotronPayload(instructionPrompt, request, stream)),
-    signal: AbortSignal.timeout(stream ? 55_000 : 30_000)
+    signal: AbortSignal.timeout(getTimeoutMs(request, stream))
   });
 }
 
@@ -173,20 +181,83 @@ async function generateWithNemotron(instructionPrompt: string, request: EnhanceR
   return content;
 }
 
+function isTimeoutError(error: unknown) {
+  return error instanceof Error && (error.name === "TimeoutError" || error.name === "AbortError");
+}
+
+function buildLocalEnhancement(request: EnhanceRequest) {
+  const rawPrompt = request.rawPrompt.trim();
+
+  if (!rawPrompt) {
+    throw new Error("Add a prompt before enhancing.");
+  }
+
+  const modeGoals = {
+    code: "generate implementation-ready code with clear architecture, edge cases, and verification steps",
+    creative: "produce a polished creative response with voice, audience, structure, and constraints",
+    business: "create a business-ready response with positioning, audience, outcomes, and next actions",
+    developer: "solve the technical task with debugging context, tradeoffs, acceptance criteria, and validation"
+  };
+
+  const formatGoals = {
+    structured: "Use labeled sections and concise bullet points.",
+    checklist: "Use a checklist with acceptance criteria.",
+    markdown: "Return clean Markdown that is ready to copy.",
+    json: "Return a JSON-ready structure with role, task, context, constraints, and output fields."
+  };
+
+  return [
+    `Act as a ${request.tone} AI assistant optimized for ${request.model}.`,
+    "",
+    "Task:",
+    rawPrompt,
+    "",
+    "Goal:",
+    `Refine the request so the response can ${modeGoals[request.mode]}.`,
+    "",
+    "Requirements:",
+    "- Preserve the original intent.",
+    "- Remove ambiguity and define the expected output clearly.",
+    "- Include relevant constraints, assumptions, edge cases, and success criteria.",
+    `- Detail level: ${request.detailLevel}.`,
+    `- Context: ${request.includeContext ? "add reasonable assumptions and label them clearly" : "use only the provided information"}.`,
+    `- Format: ${formatGoals[request.outputFormat]}`,
+    "",
+    "Final output:",
+    "Return only the completed answer or artifact requested by the prompt."
+  ].join("\n");
+}
+
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as EnhanceRequest;
     const instructionPrompt = enhancePrompt(body);
-    const enhancedPrompt = await generateWithNemotron(instructionPrompt, body);
+    let enhancedPrompt: string;
+    let provider = "nvidia-nemotron-3-super-120b-a12b";
+    let warning: string | undefined;
+
+    try {
+      enhancedPrompt = await generateWithNemotron(instructionPrompt, body);
+    } catch (generationError) {
+      if (!isTimeoutError(generationError)) {
+        throw generationError;
+      }
+
+      enhancedPrompt = buildLocalEnhancement(body);
+      provider = "local-timeout-fallback";
+      warning = "Nemotron was slow, so PromptEnhance returned a local fallback prompt.";
+    }
+
     const creditsUsed = estimateCredits(body.rawPrompt, body.model);
 
     return NextResponse.json({
       enhancedPrompt,
       creditsUsed,
-      provider: "nvidia-nemotron-3-super-120b-a12b"
+      provider,
+      warning
     });
   } catch (error) {
-    const isTimeout = error instanceof Error && error.name === "TimeoutError";
+    const isTimeout = isTimeoutError(error);
 
     return NextResponse.json(
       {

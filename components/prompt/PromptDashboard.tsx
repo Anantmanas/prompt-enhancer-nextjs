@@ -64,23 +64,23 @@ export function PromptDashboard() {
 
   return (
     <motion.div
-      className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8"
+      className="mx-auto grid w-full max-w-7xl gap-5 px-4 py-6 sm:gap-6 sm:px-6 sm:py-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(22rem,0.95fr)] lg:px-8"
       variants={revealContainer}
       initial="hidden"
       animate="visible"
     >
       <div className="flex flex-col gap-5">
-        <motion.section layout variants={revealItem} className="glass-panel rounded-[2rem] p-4 sm:p-6">
+        <motion.section layout variants={revealItem} className="glass-panel rounded-[1.5rem] p-4 sm:rounded-[2rem] sm:p-6">
           <div className="mb-5 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-            <div>
-              <h1 className="text-3xl font-semibold text-ink">Prompt Enhancer Dashboard</h1>
+            <div className="min-w-0">
+              <h1 className="text-2xl font-semibold text-ink sm:text-3xl">Prompt Enhancer Dashboard</h1>
               <p className="mt-2 text-graphite">Choose a model, tune the workflow, and generate a copy-ready prompt.</p>
             </div>
             <motion.div
               key={credits}
               initial={{ scale: 0.94, opacity: 0.6 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="rounded-full border border-line bg-white/70 px-4 py-2 text-sm font-medium text-graphite"
+              className="w-fit rounded-full border border-line bg-white/70 px-4 py-2 text-sm font-medium text-graphite"
             >
               Estimated cost: <span className="text-ink">{credits} credits</span>
             </motion.div>
@@ -90,7 +90,7 @@ export function PromptDashboard() {
             <textarea
               value={rawPrompt}
               onChange={(event) => setRawPrompt(event.target.value)}
-              className="interactive-field focus-ring min-h-56 w-full resize-y rounded-3xl border border-line bg-white/80 p-5 text-base leading-7 text-ink placeholder:text-graphite/60"
+              className="interactive-field focus-ring min-h-44 w-full resize-y rounded-3xl border border-line bg-white/80 p-4 text-base leading-7 text-ink placeholder:text-graphite/60 sm:min-h-56 sm:p-5"
               placeholder="Describe what you want the AI to do..."
             />
           </label>

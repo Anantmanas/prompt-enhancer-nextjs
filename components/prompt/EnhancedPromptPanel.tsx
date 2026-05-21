@@ -46,13 +46,13 @@ export function EnhancedPromptPanel({ value, isGenerating = false }: { value: st
   }
 
   return (
-    <section className="glass-panel flex min-h-[34rem] flex-col rounded-[2rem] p-4">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <div>
+    <section className="glass-panel flex min-h-[24rem] flex-col rounded-[1.5rem] p-4 sm:min-h-[34rem] sm:rounded-[2rem]">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
           <h2 className="font-semibold text-ink">Enhanced Prompt</h2>
           <p className="text-sm text-graphite">Copy, export, or share the optimized result.</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex shrink-0 gap-2">
           <MotionButton
             type="button"
             onClick={copyPrompt}
@@ -81,7 +81,7 @@ export function EnhancedPromptPanel({ value, isGenerating = false }: { value: st
       </div>
       <motion.div
         layout
-        className="interactive-field relative flex-1 overflow-hidden whitespace-pre-wrap rounded-3xl border border-line bg-white/80 p-5 text-sm leading-7 text-ink"
+        className="interactive-field relative flex-1 overflow-auto whitespace-pre-wrap break-words rounded-3xl border border-line bg-white/80 p-4 text-sm leading-7 text-ink sm:p-5"
       >
         <AnimatePresence mode="wait">
           {isGenerating ? (
@@ -90,7 +90,7 @@ export function EnhancedPromptPanel({ value, isGenerating = false }: { value: st
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="flex h-full min-h-96 flex-col justify-center gap-4 text-graphite"
+              className="flex h-full min-h-64 flex-col justify-center gap-4 text-graphite sm:min-h-96"
             >
               <div className="h-3 w-2/3 animate-pulse rounded-full bg-ink/10" />
               <div className="h-3 w-5/6 animate-pulse rounded-full bg-cyan/20" />

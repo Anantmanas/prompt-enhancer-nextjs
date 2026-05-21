@@ -26,18 +26,18 @@ export function PromptSettings({
   onContextChange: (enabled: boolean) => void;
 }) {
   return (
-    <div className="grid gap-4 rounded-3xl border border-line bg-white/60 p-4 md:grid-cols-4">
+    <div className="grid gap-4 rounded-3xl border border-line bg-white/60 p-4 sm:grid-cols-2 lg:grid-cols-4">
       <Select label="Tone" value={tone} options={tones} onChange={(value) => onToneChange(value as Tone)} />
       <Select label="Detail" value={detailLevel} options={details} onChange={(value) => onDetailChange(value as DetailLevel)} />
       <Select label="Format" value={outputFormat} options={formats} onChange={(value) => onFormatChange(value as OutputFormat)} />
-      <label className="interactive-field flex min-h-20 items-center justify-between rounded-2xl border border-line bg-white/70 px-4">
+      <label className="interactive-field flex min-h-20 items-center justify-between gap-4 rounded-2xl border border-line bg-white/70 px-4">
         <span>
           <span className="block text-sm font-semibold text-ink">Context</span>
           <span className="block text-xs text-graphite">Add assumptions</span>
         </span>
         <input
           checked={includeContext}
-          className="h-5 w-5 accent-ink"
+          className="h-5 w-5 shrink-0 accent-ink"
           type="checkbox"
           onChange={(event) => onContextChange(event.target.checked)}
         />

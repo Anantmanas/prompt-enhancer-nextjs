@@ -6,7 +6,7 @@ PromptEnhance is a modern AI prompt enhancer that turns rough ideas into clear, 
 
 ## Preview
 
-![PromptEnhance landing page](docs/screenshots/home.jpeg)
+![PromptEnhance landing page](docs/screenshots/home.png)
 
 ![PromptEnhance dashboard](docs/screenshots/dashboard.jpeg)
 
