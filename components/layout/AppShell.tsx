@@ -1,11 +1,19 @@
 import Link from "next/link";
-import { Sparkles } from "lucide-react";
+import { Sparkles, GitBranchIcon } from "lucide-react";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard" },
   // { href: "/history", label: "History" },
   // { href: "/pricing", label: "Pricing" },
-  { href: "https://github.com/Anantmanas/prompt-enhancer-nextjs", label: "GitHub↗" }
+  {
+    href: "https://github.com/Anantmanas/prompt-enhancer-nextjs",
+    label: (
+      <>
+        <GitBranchIcon className="h-4 w-4" />
+        <span>GitHub</span>
+      </>
+    )
+  }
 
 ];
 
