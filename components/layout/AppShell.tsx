@@ -1,14 +1,9 @@
 import Link from "next/link";
-import { ExternalLink, Globe2, Sparkles } from "lucide-react";
+import { ExternalLink, Sparkles } from "lucide-react";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", external: false },
-  {
-    href: "https://prompt-enhancer-six.vercel.app/",
-    label: "Website",
-    external: true,
-    icon: Globe2
-  },
+
   {
     href: "https://github.com/Anantmanas/prompt-enhancer-nextjs",
     label: "GitHub",
@@ -29,8 +24,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </Link>
           <nav className="flex min-w-0 flex-wrap items-center justify-end gap-1 sm:gap-2">
             {navItems.map((item) => {
-              const Icon = item.icon;
-
               return (
                 <Link
                   key={item.href}
@@ -39,7 +32,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   rel={item.external ? "noreferrer" : undefined}
                   className="focus-ring inline-flex h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3 text-sm font-medium text-graphite transition hover:bg-white hover:text-ink sm:px-4"
                 >
-                  {Icon && <Icon className="h-3.5 w-3.5" aria-hidden="true" />}
                   <span>{item.label}</span>
                   {item.external && <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />}
                 </Link>
