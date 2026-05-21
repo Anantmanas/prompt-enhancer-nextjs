@@ -1,0 +1,216 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  background: #f6f8fb;
+  color: #111318;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  isolation: isolate;
+  min-height: 100vh;
+  margin: 0;
+  background: #f6f8fb;
+  color: #111318;
+}
+
+@media (pointer: fine) and (hover: hover) {
+  body {
+    cursor: none;
+  }
+
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  [role="button"],
+  [data-cursor="interactive"],
+  .premium-card,
+  .glass-panel {
+    cursor: none;
+  }
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a,
+button:not(:disabled) {
+  transition:
+    color 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease,
+    opacity 180ms ease;
+}
+
+button:not(:disabled):active,
+a:active {
+  transform: scale(0.98);
+}
+
+input,
+textarea,
+select {
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+input:hover,
+textarea:hover,
+select:hover {
+  border-color: rgba(17, 19, 24, 0.2);
+  background-color: rgba(255, 255, 255, 0.94);
+}
+
+::selection {
+  background: rgba(59, 183, 200, 0.28);
+}
+
+.glass-panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.68);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.55));
+  box-shadow: 0 24px 80px rgba(31, 38, 55, 0.14);
+  backdrop-filter: blur(22px);
+}
+
+.glass-panel::before,
+.premium-card::before {
+  pointer-events: none;
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.64), transparent 34%),
+    radial-gradient(circle at 50% 0%, rgba(59, 183, 200, 0.16), transparent 30rem);
+  opacity: 0;
+  transition: opacity 260ms ease;
+}
+
+.glass-panel:hover::before,
+.premium-card:hover::before {
+  opacity: 1;
+}
+
+.premium-card {
+  position: relative;
+  overflow: hidden;
+  transform: translateZ(0);
+  border: 1px solid rgba(17, 19, 24, 0.1);
+  background: rgba(255, 255, 255, 0.68);
+  box-shadow: 0 18px 60px rgba(31, 38, 55, 0.1);
+  backdrop-filter: blur(18px);
+  transition:
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    background-color 220ms ease;
+}
+
+.premium-card:hover {
+  border-color: rgba(17, 19, 24, 0.18);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 28px 80px rgba(31, 38, 55, 0.16);
+}
+
+.model-card-active,
+.model-card-active:hover {
+  border-color: rgba(17, 19, 24, 0.92);
+  background: #111318;
+  color: #ffffff;
+  box-shadow: 0 28px 90px rgba(17, 19, 24, 0.24);
+}
+
+.magnetic-button {
+  position: relative;
+  overflow: hidden;
+  transform: translateZ(0);
+}
+
+.magnetic-button::before {
+  pointer-events: none;
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, 0.42), transparent 80%);
+  opacity: 0;
+  transform: translateX(-65%);
+  transition:
+    opacity 220ms ease,
+    transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.magnetic-button:hover::before {
+  opacity: 1;
+  transform: translateX(65%);
+}
+
+.magnetic-button > * {
+  position: relative;
+  z-index: 1;
+}
+
+.interactive-field {
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.interactive-field:hover {
+  border-color: rgba(17, 19, 24, 0.2);
+  background-color: rgba(255, 255, 255, 0.94);
+}
+
+.interactive-field:focus,
+.interactive-field:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(59, 183, 200, 0.56);
+  background-color: rgba(255, 255, 255, 0.98);
+}
+
+.focus-ring {
+  outline: none;
+}
+
+.focus-ring:focus-visible {
+  box-shadow: 0 0 0 4px rgba(59, 183, 200, 0.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

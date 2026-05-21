@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  plan      String   @default("free")
+  createdAt DateTime @default(now())
+  prompts   Prompt[]
+  usage     Usage[]
+}
+
+model Prompt {
+  id             String      @id @default(cuid())
+  userId         String
+  rawPrompt      String
+  enhancedPrompt String
+  model          String
+  mode           String
+  createdAt      DateTime    @default(now())
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shareLinks     ShareLink[]
+}
+
+model Usage {
+  id          String   @id @default(cuid())
+  userId      String
+  creditsUsed Int
+  action      String
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ShareLink {
+  id        String   @id @default(cuid())
+  promptId  String
+  slug      String   @unique
+  isPublic  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  prompt    Prompt   @relation(fields: [promptId], references: [id], onDelete: Cascade)
+}
